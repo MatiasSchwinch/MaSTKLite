@@ -111,6 +111,18 @@ namespace MaSTK_Lite.ViewModel
             }
         }
 
+        //  Nueva Categoría.
+        private string _newCategoryNameTXB = string.Empty;
+        public string NewCategoryNameTXB
+        {
+            get => _newCategoryNameTXB;
+            set
+            {
+                _newCategoryNameTXB = value;
+                NotifyPropertyChanged();
+            }
+        }
+
         // Nuevo Warehouse
         private string _newWarehouseName = string.Empty;
         public string NewWarehouseNameTXB
@@ -223,6 +235,17 @@ namespace MaSTK_Lite.ViewModel
             }
         }
 
+        private bool _isAddCategoryDialogOpen;
+        public bool IsAddCategoryDialogOpen
+        {
+            get => _isAddCategoryDialogOpen;
+            set
+            {
+                _isAddCategoryDialogOpen = value;
+                NotifyPropertyChanged();
+            }
+        }
+
         private bool _isAddWarehouseDialogOpen;
         public bool IsAddWarehouseDialogOpen
         {
@@ -271,6 +294,43 @@ namespace MaSTK_Lite.ViewModel
     /// </summary>
     public partial class MainViewModel
     {
+        //  Añadir nueva categoría.
+        private IRelayCommand _addCategoryBTN;
+        public IRelayCommand AddCategoryBTN => _addCategoryBTN ??= new RelayCommand(() =>
+        {
+            try
+            {
+                Category category = new() { Name = NewCategoryNameTXB };
+                _ = Database.Categories.Add(category);
+                _ = Database.SaveChanges();
+                AllCategories.Add(category);
+
+                Growl.Success(new GrowlInfo()
+                {
+                    Message = $"Se ha añadido la nueva categoría a la base de datos.",
+                    ShowDateTime = false,
+                    Type = InfoType.Success,
+                    WaitTime = 10
+                });
+
+                NewCategoryNameTXB = string.Empty;
+            }
+            catch (Exception e)
+            {
+                Growl.Error(new GrowlInfo()
+                {
+                    Message = $"Se ha producido un error al intentar agregar la categoría a la base de datos:\n\n{e.Message}",
+                    ShowDateTime = false,
+                    Type = InfoType.Error,
+                    WaitTime = 10
+                });
+            }
+            finally
+            {
+                IsAddCategoryDialogOpen = false;
+            }
+        });
+
         //  Añadir un nuevo Warehouse
         private IRelayCommand _addWarehouseBTN;
         public IRelayCommand AddWarehouseBTN => _addWarehouseBTN ??= new RelayCommand(AddWarehouse);
@@ -292,7 +352,6 @@ namespace MaSTK_Lite.ViewModel
         public IRelayCommand DeleteProductMENU => _deleteProductMENU ??= new RelayCommand(DeleteProduct, () => IsProductSelected);
 
         private IRelayCommand _aboutMeMENU;
-
         public IRelayCommand AboutMeMENU => _aboutMeMENU ??= new RelayCommand(() =>
         {
             Growl.Info(new GrowlInfo()

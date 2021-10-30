@@ -64,7 +64,7 @@
                         </MenuItem>
 
                         <!--Añadir Categoría-->
-                        <MenuItem Command="{Binding TestLambda}">
+                        <MenuItem IsCheckable="True" IsChecked="{Binding IsOpen,ElementName=DrawerTopCategory}">
                             <MenuItem.Icon>
                                 <Image Source="{StaticResource CategoryIcon}" Stretch="Uniform"/>
                             </MenuItem.Icon>
@@ -131,7 +131,8 @@
         </Grid.RowDefinitions>
         
         <!--#region Drawers-->
-            <!--Añadir Warehouse-->
+        
+        <!--#region Añadir Warehouse-->
         <hc:Drawer Name="DrawerTop" Dock="Top" ShowMode="Press" MaskCanClose="False" IsOpen="{Binding IsAddWarehouseDialogOpen}">
             <Border Background="{DynamicResource RegionBrush}" Height="212" BorderThickness="0" BorderBrush="{DynamicResource BorderBrush}">
                 <Grid>
@@ -180,7 +181,54 @@
                 </Grid>
             </Border>
         </hc:Drawer>
+        <!--#endregion-->
         
+        <!--#region Añadir Categoría-->
+        <hc:Drawer Name="DrawerTopCategory" Dock="Top" ShowMode="Press" MaskCanClose="False" IsOpen="{Binding IsAddCategoryDialogOpen}">
+            <Border Background="{DynamicResource RegionBrush}" Height="170" BorderThickness="0" BorderBrush="{DynamicResource BorderBrush}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid Margin="20" Grid.Row="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+
+                        <StackPanel Orientation="Horizontal" Grid.Row="0">
+                            <Image Source="{StaticResource CategoryIcon}" Width="18" Stretch="Uniform" Margin="0,0,14,0"/>
+                            <TextBlock Text="Añadir nueva categoría:" HorizontalAlignment="Left" Style="{StaticResource TextBlockTitle}"/>
+                        </StackPanel>
+
+                        <Grid Margin="0,20" Grid.Row="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+
+                            <hc:TextBox Text="{Binding NewCategoryNameTXB}"
+                                        hc:InfoElement.TitleWidth="140" hc:InfoElement.TitlePlacement="Left" hc:InfoElement.Title="Nombre de la categoría:"
+                                        hc:InfoElement.Placeholder="Ingrese el nombre de la categoria" ShowClearButton="True"
+                                        Height="30" Grid.Row="0"/>
+
+                            <Grid Margin="0,20" Grid.Row="2">
+                                <Button Content="Volver atrás" Command="hc:ControlCommands.Close" Height="34" HorizontalAlignment="Left"
+                                        hc:IconElement.Geometry="{StaticResource LeftGeometry}" Style="{StaticResource ButtonDanger}"/>
+
+                                <Button Command="{Binding AddCategoryBTN}" Content="Guardar nueva categoría" Height="34" HorizontalAlignment="Right"
+                                        hc:IconElement.Geometry="{StaticResource SaveGeometry}" Style="{StaticResource ButtonSuccess}"/>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+
+                </Grid>
+            </Border>
+        </hc:Drawer>
+        <!--#endregion-->
+
         <!--Añadir o Editar Producto-->
         <hc:Drawer Name="DrawerLeft" Dock="Left" ShowMode="Press" MaskCanClose="False" IsOpen="{Binding IsAddProductDialogOpen}">
             <Border Background="{DynamicResource RegionBrush}" Width="440" BorderThickness="0" BorderBrush="{DynamicResource BorderBrush}">
