@@ -1,0 +1,351 @@
+﻿<hc:Window x:Class="MaSTK_Lite.View.MainWindow"
+           xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+           xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+           xmlns:hc="https://handyorg.github.io/handycontrol"
+           xmlns:local="clr-namespace:MaSTK_Lite"
+           xmlns:vm="clr-namespace:MaSTK_Lite.ViewModel"
+           d:DataContext="{d:DesignInstance Type=vm:MainViewModel}"
+           mc:Ignorable="d"
+           ShowTitle="False"
+           NonClientAreaHeight="38"
+           CloseButtonHoverBackground="{DynamicResource DangerBrush}"
+           CloseButtonForeground="#A4A5A5"
+           OtherButtonForeground="#A4A5A5"
+           Background="#EEEEEE"
+           WindowStartupLocation="CenterScreen"
+           Title="MaSTK Lite" Height="650" MinHeight="600" Width="1150" MinWidth="810"
+           VirtualizingPanel.VirtualizationMode="Recycling">
+    <hc:Window.NonClientAreaContent>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            
+            <!--#region Menu Item-->
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch" Grid.Row="0" Grid.Column="0">
+                <Menu>
+                    <!-- Menu principal: Añadir-->
+                    <MenuItem Header="Añadir" Height="40">
+                        <MenuItem.Icon>
+                            <Image Source="{StaticResource AddIcon}" Stretch="Uniform"/>
+                        </MenuItem.Icon>
+
+                        <!--Añadir Almacén-->
+                        <MenuItem IsCheckable="True" IsChecked="{Binding IsOpen,ElementName=DrawerTop}">
+                            <MenuItem.Icon>
+                                <Image Source="{StaticResource WarehouseIcon}" Stretch="Uniform"/>
+                            </MenuItem.Icon>
+                            <MenuItem.Header>
+                                <Grid Height="30">
+                                    <TextBlock Text="Nuevo almacén" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0"/>
+                                </Grid>
+                            </MenuItem.Header>
+                        </MenuItem>
+
+                        <Separator Background="#EEEEEE"/>
+
+                        <!--Añadir Producto-->
+                        <MenuItem Command="{Binding AddProductMENU}">
+                            <MenuItem.Icon>
+                                <Image Source="{StaticResource ProductIcon}" Stretch="Uniform"/>
+                            </MenuItem.Icon>
+                            <MenuItem.Header>
+                                <Grid Height="30">
+                                    <TextBlock Text="Nuevo producto" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0"/>
+                                </Grid>
+                            </MenuItem.Header>
+                        </MenuItem>
+
+                        <!--Añadir Categoría-->
+                        <MenuItem Command="{Binding TestLambda}">
+                            <MenuItem.Icon>
+                                <Image Source="{StaticResource CategoryIcon}" Stretch="Uniform"/>
+                            </MenuItem.Icon>
+                            <MenuItem.Header>
+                                <Grid Height="30">
+                                    <TextBlock Text="Nueva categoría" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0"/>
+                                </Grid>
+                            </MenuItem.Header>
+                        </MenuItem>
+                    </MenuItem>
+                </Menu>
+                <Menu>
+                    <MenuItem Header="Acerca de..." Height="40" Command="{Binding AboutMeMENU}">
+                        <MenuItem.Icon>
+                            <Image Source="{StaticResource InfoIcon}" Stretch="Uniform"/>
+                        </MenuItem.Icon>
+                        
+                    </MenuItem>
+                </Menu>
+            </StackPanel>
+
+            <Grid Grid.Row="0" Grid.Column="1">
+                <Border Background="#326cf3" Height="29" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="4,0,0,4">
+                    <TextBlock Text="MaSTK Lite" Foreground="White" VerticalAlignment="Center" Margin="6,0" FontSize="10" FontWeight="SemiBold"/>
+                </Border>
+            </Grid>
+            <!--#endregion-->
+
+            <!--#region Otros Controles-->
+            <Grid Grid.Row="1" Grid.ColumnSpan="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+
+                <!--#region Seleccionar Almacén-->
+                <Grid Grid.Column="0" Margin="0,10">
+                    <hc:ComboBox ItemsSource="{Binding AllWarehouse}" SelectedItem="{Binding CurrentWarehouse}" 
+                                 hc:InfoElement.Placeholder="Seleccione un almacén" hc:InfoElement.Title="Almacén actual:"
+                                 hc:TitleElement.TitlePlacement="Left" hc:TitleElement.TitleWidth="100"
+                                 Style="{StaticResource ComboBoxExtend}" Margin="10,0,0,0"/>
+                </Grid>
+                <!--#endregion-->
+
+                <!--#region Barra de Búsqueda-->
+                <Grid Grid.Column="1" Margin="0,10">
+                    <hc:TextBox Text="{Binding SearchProductTXB, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsWarehouseSelected}"
+                                hc:InfoElement.Placeholder="Buscar producto" hc:InfoElement.Title="Busqueda:"
+                                hc:TitleElement.TitlePlacement="Left" ShowClearButton="True" hc:TitleElement.TitleWidth="70"
+                                Margin="20,0,0,0"/>
+                </Grid>
+                <!--#endregion-->
+
+            </Grid>
+            <!--#endregion-->
+
+        </Grid>
+    </hc:Window.NonClientAreaContent>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <!--#region Drawers-->
+            <!--Añadir Warehouse-->
+        <hc:Drawer Name="DrawerTop" Dock="Top" ShowMode="Press" MaskCanClose="False" IsOpen="{Binding IsAddWarehouseDialogOpen}">
+            <Border Background="{DynamicResource RegionBrush}" Height="212" BorderThickness="0" BorderBrush="{DynamicResource BorderBrush}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid Margin="20" Grid.Row="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+
+                        <StackPanel Orientation="Horizontal" Grid.Row="0">
+                            <Image Source="{StaticResource WarehouseIcon}" Width="18" Stretch="Uniform" Margin="0,0,14,0"/>
+                            <TextBlock Text="Añadir nuevo almacén:" HorizontalAlignment="Left" Style="{StaticResource TextBlockTitle}"/>
+                        </StackPanel>
+                        
+                        <Grid Margin="0,20" Grid.Row="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+
+                            <hc:TextBox Text="{Binding NewWarehouseNameTXB}"
+                                        hc:InfoElement.TitleWidth="140" hc:InfoElement.TitlePlacement="Left" hc:InfoElement.Title="Nombre del almacén:"
+                                        hc:InfoElement.Placeholder="Ingrese el nombre del almacén" ShowClearButton="True"
+                                        Height="30" Grid.Row="0"/>
+
+                            <hc:TextBox Text="{Binding NewWarehouseDescTXB}"
+                                        hc:InfoElement.TitleWidth="140" hc:InfoElement.TitlePlacement="Left" hc:InfoElement.Title="Descripcion del almacén:"
+                                        hc:InfoElement.Placeholder="Ingrese una breve descripcion del almacén" ShowClearButton="True"
+                                        Height="30" Margin="0,10,0,0" Grid.Row="1"/>
+
+                            <Grid Margin="0,20" Grid.Row="2">
+                                <Button Content="Volver atrás" Command="hc:ControlCommands.Close" Height="34" HorizontalAlignment="Left"
+                                        hc:IconElement.Geometry="{StaticResource LeftGeometry}" Style="{StaticResource ButtonDanger}"/>
+
+                                <Button Command="{Binding AddWarehouseBTN}" Content="Guardar nuevo almacén" Height="34" HorizontalAlignment="Right"
+                                        hc:IconElement.Geometry="{StaticResource SaveGeometry}" Style="{StaticResource ButtonSuccess}"/>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+
+                </Grid>
+            </Border>
+        </hc:Drawer>
+        
+        <!--Añadir o Editar Producto-->
+        <hc:Drawer Name="DrawerLeft" Dock="Left" ShowMode="Press" MaskCanClose="False" IsOpen="{Binding IsAddProductDialogOpen}">
+            <Border Background="{DynamicResource RegionBrush}" Width="440" BorderThickness="0" BorderBrush="{DynamicResource BorderBrush}">
+                <StackPanel Orientation="Vertical" Margin="20,20,0,0">
+
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                        <Image Source="{StaticResource ProductIcon}" Width="18" Stretch="Uniform" Margin="0,0,14,0"/>
+                        <TextBlock HorizontalAlignment="Left">
+                            <TextBlock.Style>
+                                <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource TextBlockTitle}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Mode}">
+                                            <DataTrigger.Value>
+                                                <vm:Mode>Add</vm:Mode>
+                                            </DataTrigger.Value>
+                                            <Setter Property="Text" Value="Añadir nuevo producto:"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Mode}">
+                                            <DataTrigger.Value>
+                                                <vm:Mode>Edit</vm:Mode>
+                                            </DataTrigger.Value>
+                                            <Setter Property="Text" Value="Editar producto:"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </StackPanel>
+
+                    <!--#region Campos de las Propiedades-->
+                    <DatePicker SelectedDate="{Binding DateNewProductTXB}"
+                                hc:InfoElement.TitleWidth="110" hc:InfoElement.TitlePlacement="Left" hc:InfoElement.Title="Fecha"
+                                hc:InfoElement.Placeholder="Ingrese la fecha de actualización"
+                                Style="{StaticResource DatePickerExtend}" Height="30" Margin="0,0,20,10"/>
+
+                    <hc:TextBox Text="{Binding ProductSKUNewProductTXB}"
+                                hc:InfoElement.TitleWidth="110" hc:InfoElement.TitlePlacement="Left" hc:InfoElement.Title="SKU"
+                                hc:InfoElement.Placeholder="Ingrese el SKU del producto" ShowClearButton="True"
+                                Height="30" Margin="0,0,20,10"/>
+
+                    <ComboBox ItemsSource="{Binding AllCategories}" SelectedItem="{Binding CategoryNewProductTXB}"
+                                hc:InfoElement.TitleWidth="110" hc:InfoElement.TitlePlacement="Left" hc:InfoElement.Title="Categoria"
+                                hc:InfoElement.Placeholder="Ingrese la categoria del producto"
+                                Style="{StaticResource ComboBoxExtend}" Height="30" Margin="0,0,20,10"/>
+
+                    <TextBox Text="{Binding BrandNewProductTXB}"
+                             hc:InfoElement.TitleWidth="110" hc:InfoElement.TitlePlacement="Left" hc:InfoElement.Title="Marca"
+                             hc:InfoElement.Placeholder="Ingrese la Marca del producto si corresponde"
+                             Style="{StaticResource TextBoxExtend}" Height="30" Margin="0,0,20,10"/>
+
+                    <TextBox Text="{Binding ModelNewProductTXB}"
+                             hc:InfoElement.TitleWidth="110" hc:InfoElement.TitlePlacement="Left" hc:InfoElement.Title="Modelo"
+                             hc:InfoElement.Placeholder="Ingrese el modelo del producto si corresponde"
+                             Style="{StaticResource TextBoxExtend}" Height="30" Margin="0,0,20,10"/>
+
+                    <hc:TextBox Text="{Binding DescNewProductTXB}" VerticalScrollBarVisibility="Auto" AcceptsReturn="True" TextWrapping="Wrap"
+                                hc:InfoElement.TitleWidth="110" hc:InfoElement.TitlePlacement="Left" hc:InfoElement.Title="Descripción"
+                                hc:InfoElement.Placeholder="Ingrese una descripción del producto" ShowClearButton="True"
+                                VerticalContentAlignment="Top" Height="80" Margin="0,0,20,10"/>
+
+                    <hc:NumericUpDown Value="{Binding PriceNewProductTXB}" Maximum="1000000000"
+                                      hc:InfoElement.TitleWidth="110" hc:InfoElement.TitlePlacement="Left" hc:InfoElement.Title="Precio"
+                                      hc:InfoElement.Placeholder="Ingrese el stock del producto" ShowClearButton="True"
+                                      Style="{StaticResource NumericUpDownPlus}" ValueFormat="N2" Height="30" Margin="0,0,20,10"/>
+
+                    <hc:NumericUpDown Value="{Binding StockNewProductTXB}" Maximum="1000000000"
+                                      hc:InfoElement.TitleWidth="110" hc:InfoElement.TitlePlacement="Left" hc:InfoElement.Title="Stock"
+                                      hc:InfoElement.Placeholder="Ingrese el stock del producto" ShowClearButton="True"
+                                      Style="{StaticResource NumericUpDownPlus}" Height="30" Margin="0,0,20,36"/>
+                    <!--#endregion-->
+
+                    <Grid>
+                        <Button Content="Volver atrás" Command="hc:ControlCommands.Close" Height="34" HorizontalAlignment="Left"
+                                hc:IconElement.Geometry="{StaticResource LeftGeometry}" Style="{StaticResource ButtonDanger}"/>
+
+                        <Button Command="{Binding AddOrEditProductBTN}" Height="34" HorizontalAlignment="Right"
+                                hc:IconElement.Geometry="{StaticResource SaveGeometry}" Margin="0,0,20,0">
+                            <Button.Style>
+                                <Style TargetType="{x:Type Button}" BasedOn="{StaticResource ButtonSuccess}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Mode}">
+                                            <DataTrigger.Value>
+                                                <vm:Mode>Add</vm:Mode>
+                                            </DataTrigger.Value>
+                                            <Setter Property="Content" Value="Guardar nuevo producto"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Mode}">
+                                            <DataTrigger.Value>
+                                                <vm:Mode>Edit</vm:Mode>
+                                            </DataTrigger.Value>
+                                            <Setter Property="Content" Value="Editar producto"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                    </Grid>
+
+                </StackPanel>
+            </Border>
+        </hc:Drawer>
+        <!--#endregion-->
+
+        <!--#region DataGrid-->
+        <DataGrid ItemsSource="{Binding AllProducts}" SelectedItem="{Binding CurrentProduct}" SelectedIndex="{Binding CurrentProductIndex}"
+                  AutoGenerateColumns="False" hc:DataGridAttach.CanUnselectAllWithBlankArea="True" IsReadOnly="True"
+                  SelectionMode="Single" Grid.Row="0">
+            <DataGrid.Columns>
+                <!--ID (Solo Lectura)-->
+                <DataGridTextColumn Header="ID" IsReadOnly="True" Binding="{Binding ProductID}"/>
+                
+                <!--Fecha-->
+                <DataGridTextColumn Header="Fecha" Binding="{Binding Date, StringFormat={}{0:dd/MM/yyyy}}"/>
+
+                <!--ID del producto-->
+                <DataGridTextColumn Header="SKU" Binding="{Binding ProductSKU}"/>
+                
+                <!--Categoría-->
+                <DataGridTextColumn Header="Categoría" Binding="{Binding Category}"/>
+                
+                <!--Marca-->
+                <DataGridTextColumn Header="Marca" Binding="{Binding Brand}"/>
+                
+                <!--Modelo-->
+                <DataGridTextColumn Header="Modelo" Binding="{Binding Model}"/>
+
+                <!--Descripción-->
+                <DataGridTextColumn Header="Descripción" Binding="{Binding Description}"/>
+
+                <!--Stock-->
+                <DataGridTextColumn Header="Stock" Binding="{Binding Stock}"/>
+
+                <!--Precio-->
+                <DataGridTextColumn Header="Precio" Binding="{Binding Price, StringFormat=C}"/>
+            </DataGrid.Columns>
+            
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Command="{Binding EditProductMENU}">
+                        <MenuItem.Icon>
+                            <Image Source="{StaticResource EditIcon}" Stretch="Uniform"/>
+                        </MenuItem.Icon>
+                        <MenuItem.Header>
+                            <Grid Height="30">
+                                <TextBlock Text="Editar" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0"/>
+                            </Grid>
+                        </MenuItem.Header>
+                    </MenuItem>
+                    
+                    <Separator Background="#EEEEEE"/>
+                    
+                    <MenuItem Command="{Binding DeleteProductMENU}">
+                        <MenuItem.Icon>
+                            <Image Source="{StaticResource DeleteIcon}" Stretch="Uniform"/>
+                        </MenuItem.Icon>
+                        <MenuItem.Header>
+                            <Grid Height="30">
+                                <TextBlock Text="Eliminar" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0"/>
+                            </Grid>
+                        </MenuItem.Header>
+                    </MenuItem>
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+        </DataGrid>
+        <!--#endregion-->
+
+    </Grid>
+</hc:Window>
