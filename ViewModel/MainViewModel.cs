@@ -419,19 +419,6 @@ namespace MaSTK_Lite.ViewModel
 
         private void EditProduct()
         {
-            #region AntiguoDialogo
-            //DialogResult = await Dialog.Show<ProductDialog>()
-            //               .Initialize<ProductDialogViewModel>(vm =>
-            //               {
-            //                   vm.TriggerMode = Mode.Edit;
-            //                   //vm.ActualProduct = CurrentProduct;
-            //                   vm.Categories = AllCategories;
-            //                   vm.NewProduct = CurrentProduct.Clone();
-            //               })
-            //               .GetResultAsync<Product>()
-            //               .ContinueWith(fn => DialogResult = fn.Result);
-            #endregion
-
             if (CurrentWarehouse is null) { return; }
 
             Mode = Mode.Edit;
@@ -613,7 +600,6 @@ namespace MaSTK_Lite.ViewModel
         {
             return obj is Product prt && prt.Description.Contains(SearchProductTXB, StringComparison.InvariantCultureIgnoreCase);
         }
-
     }
 
     public enum Mode

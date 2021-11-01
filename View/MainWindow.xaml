@@ -16,7 +16,8 @@
            Background="#EEEEEE"
            WindowStartupLocation="CenterScreen"
            Title="MaSTK Lite" Height="650" MinHeight="600" Width="1150" MinWidth="810"
-           VirtualizingPanel.VirtualizationMode="Recycling">
+           VirtualizingPanel.VirtualizationMode="Recycling"
+           FontFamily="{StaticResource Rubik}">
     <hc:Window.NonClientAreaContent>
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
@@ -229,7 +230,7 @@
         </hc:Drawer>
         <!--#endregion-->
 
-        <!--Añadir o Editar Producto-->
+        <!--#region Añadir Producto-->
         <hc:Drawer Name="DrawerLeft" Dock="Left" ShowMode="Press" MaskCanClose="False" IsOpen="{Binding IsAddProductDialogOpen}">
             <Border Background="{DynamicResource RegionBrush}" Width="440" BorderThickness="0" BorderBrush="{DynamicResource BorderBrush}">
                 <StackPanel Orientation="Vertical" Margin="20,20,0,0">
@@ -292,12 +293,12 @@
                     <hc:NumericUpDown Value="{Binding PriceNewProductTXB}" Maximum="1000000000"
                                       hc:InfoElement.TitleWidth="110" hc:InfoElement.TitlePlacement="Left" hc:InfoElement.Title="Precio"
                                       hc:InfoElement.Placeholder="Ingrese el stock del producto" ShowClearButton="True"
-                                      Style="{StaticResource NumericUpDownPlus}" ValueFormat="N2" Height="30" Margin="0,0,20,10"/>
+                                      Style="{StaticResource NumericUpDownExtend}" ValueFormat="N2" Height="30" Margin="0,0,20,10"/>
 
                     <hc:NumericUpDown Value="{Binding StockNewProductTXB}" Maximum="1000000000"
                                       hc:InfoElement.TitleWidth="110" hc:InfoElement.TitlePlacement="Left" hc:InfoElement.Title="Stock"
                                       hc:InfoElement.Placeholder="Ingrese el stock del producto" ShowClearButton="True"
-                                      Style="{StaticResource NumericUpDownPlus}" Height="30" Margin="0,0,20,36"/>
+                                      Style="{StaticResource NumericUpDownExtend}" Height="30" Margin="0,0,20,36"/>
                     <!--#endregion-->
 
                     <Grid>
@@ -330,6 +331,8 @@
                 </StackPanel>
             </Border>
         </hc:Drawer>
+        <!--#endregion-->
+        
         <!--#endregion-->
 
         <!--#region DataGrid-->
