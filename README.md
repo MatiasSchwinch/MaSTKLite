@@ -7,7 +7,7 @@ MaSTK Lite es un gestor de stock fácil de utilizar, programado en C# y WPF.
 - Se implementa el patrón de diseño Modelo-Vista-VistaModelo para conectar las propiedades con las vistas, e inyección de dependencias para la clase la cual establece la conexión con la base de datos, y el MainViewModel.
 - Se utiliza una librería de controles WPF de terceros llamada HandyControl donde se utilizan algunos controles que esta ofrece.
 
-![MaSTKLite](https://user-images.githubusercontent.com/93444165/139869068-b30c16a5-f721-4d54-a9be-73336dd3af55.gif)
+![mastklite](https://user-images.githubusercontent.com/93444165/152562004-8776799d-0b69-4fd2-b39a-223a17b5412d.gif)
 
 - .NET 5.0
 - Windows Presentation Foundation (WPF)
