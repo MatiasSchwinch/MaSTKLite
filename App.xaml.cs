@@ -3,7 +3,6 @@ using System.Windows;
 using MaSTK_Lite.Service;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection;
 using MaSTK_Lite.ViewModel;
 using MaSTK_Lite.View;
 
@@ -17,8 +16,11 @@ namespace MaSTK_Lite
 
         public App()
         {
-            HandyControl.Tools.ConfigHelper.Instance.SetLang("es");
             Services = ConfigureServices();
+
+            if (!System.IO.File.Exists(DbName)) Services.GetService<DBConnector>().Database.Migrate();
+
+            HandyControl.Tools.ConfigHelper.Instance.SetLang("es");
         }
 
         private static IServiceProvider ConfigureServices()
@@ -26,11 +28,7 @@ namespace MaSTK_Lite
             ServiceCollection services = new();
 
             _ = services.AddDbContext<DBConnector>(options =>
-                  options.UseSqlite(connectionString: $"Filename={DbName}",
-                  sqliteOptionsAction: op =>
-                  {
-                      _ = op.MigrationsAssembly(Assembly.GetExecutingAssembly().FullName);
-                  }));
+                  options.UseSqlite(connectionString: $"Data Source={DbName}"));
             _ = services.AddSingleton<MainViewModel>();
 
             return services.BuildServiceProvider();

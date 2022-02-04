@@ -1,34 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MaSTK_Lite.Model
 {
-    [Table("Products")]
     public class Product
     {
-        [Key, Column(Order = 0)]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ProductID { get; set; }
-        public DateTime Date { get; set; }
-        public string ProductSKU { get; set; }
-
+        public int WarehouseID { get; set; }
         public int? CategoryID { get; set; }
-        [ForeignKey("CategoryID")]
-        public Category Category { get; set; }
 
-        public string Brand { get; set; }
-        public string Model { get; set; }
-        public string Description { get; set; }
-
+        public DateTime Date { get; set; }
+        public string ProductSKU { get; set; } = null!;
+        public string Brand { get; set; } = null!;
+        public string Model { get; set; } = null!;
+        public string Description { get; set; } = null!;
         public int Stock { get; set; }
         public float Price { get; set; }
 
-        public int WarehouseID { get; set; }
-        [ForeignKey("WarehouseID")]
-        public virtual Warehouse Warehouse { get; set; }
+        public Category Category { get; set; } = null!;
+        public Warehouse Warehouse { get; set; } = null!;
 
         public Product()
         {

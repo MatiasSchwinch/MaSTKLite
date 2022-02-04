@@ -1,18 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MaSTK_Lite.Model
 {
-    [Table("Warehouses")]
     public class Warehouse
     {
-        [Key, Column(Order = 0)]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int WarehouseID { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
+        public string Name { get; set; } = null!;
+        public string Description { get; set; } = null!;
         public ProductsCollection Products { get; set; }
 
         public Warehouse Clone()

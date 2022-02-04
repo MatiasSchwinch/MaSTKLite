@@ -41,6 +41,11 @@ namespace MaSTK_Lite.ViewModel
                     NotifyPropertyChanged(nameof(AllProducts));
                     AllProducts.Filter = SearchProduct;
                 }
+                else
+                {
+                    AllProducts = null;
+                    NotifyPropertyChanged(nameof(AllProducts));
+                }
             }
         }
 
@@ -267,6 +272,29 @@ namespace MaSTK_Lite.ViewModel
                 NotifyPropertyChanged();
             }
         }
+
+        // Eliminar
+        private Warehouse _currentToDeleteWarehouse;
+        public Warehouse CurrentToDeleteWarehouse
+        {
+            get => _currentToDeleteWarehouse;
+            set
+            {
+                _currentToDeleteWarehouse = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        private Category _currentToDeleteCategory;
+        public Category CurrentToDeleteCategory
+        {
+            get => _currentToDeleteCategory;
+            set
+            {
+                _currentToDeleteCategory = value;
+                NotifyPropertyChanged();
+            }
+        }
         #endregion
 
         public MainViewModel(DBConnector db)
@@ -350,6 +378,71 @@ namespace MaSTK_Lite.ViewModel
         //  Menu contextual del data grid "Borrar"
         private IRelayCommand _deleteProductMENU;
         public IRelayCommand DeleteProductMENU => _deleteProductMENU ??= new RelayCommand(DeleteProduct, () => IsProductSelected);
+
+        // Elimina el Warehouse seleccionado.
+        private IRelayCommand _deleteWarehouseBTN;
+        public IRelayCommand DeleteWarehouseBTN => _deleteWarehouseBTN ??= new RelayCommand(() =>
+        {
+            //AllCategories.Remove(CurrentToDeleteCategory);
+            //Database.Categories.Remove(CurrentToDeleteCategory);
+            //Database.SaveChanges();
+            try
+            {
+                Database.Warehouses.Remove(CurrentToDeleteWarehouse);
+                Database.SaveChanges();
+
+                AllWarehouse.Remove(CurrentToDeleteWarehouse);
+                CurrentWarehouse = null;
+
+                Growl.Success(new GrowlInfo()
+                {
+                    Message = $"Se ha eliminado el almacén seleccionado de la base de datos.",
+                    ShowDateTime = false,
+                    Type = InfoType.Success,
+                    WaitTime = 10
+                });
+            }
+            catch (Exception e)
+            {
+                Growl.Error(new GrowlInfo()
+                {
+                    Message = $"Se ha producido un error al intentar eliminar el almacén de la base de datos:\n\n{e.Message}",
+                    ShowDateTime = false,
+                    Type = InfoType.Error,
+                    WaitTime = 10
+                });
+            }
+        });
+
+        private IRelayCommand _deleteCategoryBTN;
+        public IRelayCommand DeleteCategoryBTN => _deleteCategoryBTN ??= new RelayCommand(() =>
+        {
+            try
+            {
+                Database.Categories.Remove(CurrentToDeleteCategory);
+                Database.SaveChanges();
+
+                AllCategories.Remove(CurrentToDeleteCategory);
+
+                Growl.Success(new GrowlInfo()
+                {
+                    Message = $"Se ha eliminado la categoría seleccionada de la base de datos.",
+                    ShowDateTime = false,
+                    Type = InfoType.Success,
+                    WaitTime = 10
+                });
+            }
+            catch (Exception e)
+            {
+                Growl.Error(new GrowlInfo()
+                {
+                    Message = $"Se ha producido un error al intentar eliminar la categoría de la base de datos:\n\n{e.Message}",
+                    ShowDateTime = false,
+                    Type = InfoType.Error,
+                    WaitTime = 10
+                });
+            }
+        });
 
         private IRelayCommand _aboutMeMENU;
         public IRelayCommand AboutMeMENU => _aboutMeMENU ??= new RelayCommand(() =>
